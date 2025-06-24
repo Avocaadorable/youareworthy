@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>You Are Worthy</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    body {
+      font-family: "Arial", sans-serif;
+      transition: background-color 1000ms;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+    }
+
+    main {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    @keyframes floating {
+      0% {
+        transform: translate(0, 0px) rotate(0deg);
+      }
+      50% {
+        transform: translate(0, 15px) rotate(2deg);
+      }
+      100% {
+        transform: translate(0, -0px) rotate(0deg);
+      }
+    }
+
+    .phrase {
+      color: #E91E63;
+      font-family: Arial;
+      position: absolute;
+      max-width: 80vw;
+      padding: 10px;
+      white-space: nowrap;
+      transition: all 3000ms;
+      transform: translate(0, -50%);
+      opacity: 0.7;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .phrase.in-focus {
+      transform: translate(-50%, -50%);
+      opacity: 1;
+      z-index: 10;
+    }
+
+    .placeholder {
+      visibility: hidden;
+      position: relative;
+    }
+
+    .text {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    button {
+      display: block;
+      appearance: none;
+      overflow: hidden;
+      height: 60px;
+      line-height: 17px;
+      border-radius: .2em;
+      border: #E91E63 1px solid;
+      font-size: 20px;
+      background-color: #F8BBD0;
+      z-index: 2;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #F48FB1;
+      border: #E91E63 1px solid;
+      transform: scale(1.02);
+    }
+
+    #initialButton {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 20;
+    }
+
+    #refresh-button,
+    #email-button {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+      z-index: 20;
+    }
+
+    #refresh-button {
+      left: 18%;
+    }
+
+    #email-button {
+      left: 82%;
+    }
+
+    #about-button {
+      position: absolute;
+      color: black;
+      border: #E91E63 1px solid;
+      font-size: 20px;
+      background-color: #F8BBD0;
+      top: 0;
+      right: 0;
+      margin: 1em;
+      aspect-ratio: 1 /1;
+      z-index: 101;
+      color: black;
+    }
+
+    #about-button:hover {
+      background-color: #F48FB1;
+      border: #E91E63 1px solid;
+    }
+
+    #about-text {
+      display: none;
+      padding: 2rem;
+      padding-right: 6rem;
+      position: absolute;
+      color: black;
+      background: rgba(255, 255, 255, 0.95);
+      z-index: 100;
+      height: 100%;
+      width: 100%;
+      overflow: auto;
+    }
+
+    #about-text p {
+      line-height: 167%;
+      font-size: 1.25rem;
+      max-width: 800px;
+      color: #E91E63;
+    }
+
+    button:focus {
+      outline: 1px #E91E63 solid;
+    }
+
+    button ul {
+      margin-top: 0;
+      padding: 0;
+      list-style: none;
+      transition: margin-top .45s ease-in-out;
+    }
+
+    button ul li {
+      display: block;
+      height: 55px;
+      padding: 1em;
+    }
+
+    @media screen and (max-width: 768px) {
+      #initialButton {
+        top: calc(100% - 9rem);
+        transform: translate(-50%, 0);
+        white-space: nowrap;
+      }
+
+      #refresh-button {
+        top: calc(100% - 9rem);
+        transform: translate(0, 0);
+        left: 3rem;
+      }
+      
+      #email-button {
+        left: auto;
+        top: calc(100% - 9rem);
+        transform: translate(0, 0);
+        right: 3rem;
+      }
+
+      .phrase {
+        max-width: 90vw;
+        white-space: normal;
+      }
+      
+      .phrase.in-focus {
+        width: 100%;
+        text-align: center;
+      }
+
+      .text {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top"></div>
+
+  <button type="button" id="initialButton">
+    <ul>
+      <li>I'm feeling unworthy</li>
+      <li>I'm feeling insecure</li>
+      <li>I'm feeling doubtful</li>
+      <li>I'm feeling inadequate</li>
+      <li>I'm feeling lost</li>
+      <li>I'm feeling uncertain</li>
+    </ul>
+  </button>
+
+  <button type="button" id="refresh-button">start over</button>
+  <button type="button" id="email-button">email affirmation</button>
+
+  <button type="button" id="about-button">♡?</button>
+
+  <div id="about-text">
+    <p>
+      "You Are Worthy" is an interactive affirmation generator. When you click the button, you'll receive three randomly selected affirmations to remind you of your inherent worth. These positive messages will appear in the center of the screen, forming a personal affirmation just for you. If you'd like to save it, you can email it to yourself. If it doesn't resonate, you can always start over and receive a new set of affirmations. Remember - you are worthy exactly as you are. ♡
+    </p>
+  </div>
+
+  <main></main>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    // Fallback if jQuery didn't load
+    window.jQuery || document.write('<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"><\/script>');
+    window.jQuery || document.write('<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"><\/script>');
+  </script>
+  
+  <script>
+    // Expanded list of affirmations
+    var words = [
+      "You are enough", "You matter", "Your worth is infinite", "You deserve love", 
+      "You are valuable", "Your feelings are valid", "You belong here", "You are important",
+      "You are loved beyond measure", "You are worthy of respect", "You are worthy of happiness",
+      "You are growing beautifully", "Your presence is a gift", "You have unique gifts to share",
+      "You are stronger than you know", "You are capable of amazing things", "You are resilient",
+      "You are worthy of good things", "Your mistakes don't define you", "You are worthy of kindness",
+      "You are worthy of peace", "You are worthy of success", "You are worthy of joy",
+      "You are worthy of rest", "You are worthy of understanding", "You are worthy of patience",
+      "You are worthy of forgiveness", "You are worthy of compassion", "You are worthy of acceptance",
+      "You are worthy exactly as you are", "Your worth is constant", "You don't need to prove anything",
+      "You are enough right now", "You are worthy of self-care", "You are worthy of boundaries",
+      "You are worthy of healthy relationships", "You are worthy of your dreams", "You are worthy of space",
+      "You are worthy of time", "You are worthy of attention", "You are worthy of being heard",
+      "You are worthy of being seen", "You are worthy of comfort", "You are worthy of safety",
+      "You are worthy of trust", "You are worthy of second chances", "You are worthy of new beginnings",
+      "You are worthy of celebration", "You are worthy of good health", "You are worthy of abundance",
+      "You are worthy of creative expression", "You are worthy of adventure", "You are worthy of quiet moments",
+      "You are worthy of laughter", "You are worthy of deep connections", "You are worthy of simple pleasures",
+      "You are worthy of all emotions", "You are worthy of growth", "You are worthy of change",
+      "You are worthy of stability", "You are worthy of curiosity", "You are worthy of clarity",
+      "You are worthy of sunshine", "You are worthy of rain", "You are worthy of all seasons",
+      "You are worthy of the stars", "You are worthy of the moon", "You are worthy of this earth",
+      "You are worthy of the air you breathe", "You are worthy of this moment", "You are worthy of every moment",
+      "You are worthy of your own love", "You are worthy of your own respect", "You are worthy of your own kindness",
+      "You are worthy of your own patience", "You are worthy of your own forgiveness", "You are worthy of your own compassion",
+      "You are worthy of your own acceptance", "You are worthy of believing in yourself", "You are worthy of trusting yourself",
+      "You are worthy of honoring yourself", "You are worthy of prioritizing yourself", "You are worthy of investing in yourself",
+      "You are worthy of being proud of yourself", "You are worthy of feeling good", "You are worthy of inner peace",
+      "You are worthy of joy within", "You are worthy of love within", "You are worthy of all the good within you",
+      "You are worthy of all the love you give", "You are worthy of receiving love", "You are worthy of giving love",
+      "You are worthy of sharing love", "You are worthy of experiencing love", "You are worthy of knowing love",
+      "You are worthy of being love", "You are worthy of tenderness", "You are worthy of gentleness",
+      "You are worthy of excitement", "You are worthy of passion", "You are worthy of creativity",
+      "You are worthy of inspiration", "You are worthy of motivation", "You are worthy of achievement",
+      "You are worthy of recognition", "You are worthy of appreciation", "You are worthy of gratitude",
+      "You are worthy of friendship", "You are worthy of companionship", "You are worthy of community",
+      "You are worthy of support", "You are worthy of encouragement", "You are worthy of praise",
+      "You are worthy of compliments", "You are worthy of smiles", "You are worthy of hugs",
+      "You are worthy of kindness", "You are worthy of generosity", "You are worthy of thoughtfulness",
+      "You are worthy of consideration", "You are worthy of respect", "You are worthy of dignity",
+      "You are worthy of honor", "You are worthy of integrity", "You are worthy of authenticity",
+      "You are worthy of truth", "You are worthy of honesty", "You are worthy of openness",
+      "You are worthy of vulnerability", "You are worthy of courage", "You are worthy of bravery",
+      "You are worthy of strength", "You are worthy of perseverance", "You are worthy of determination",
+      "You are worthy of resilience", "You are worthy of flexibility", "You are worthy of adaptability",
+      "You are worthy of learning", "You are worthy of growth", "You are worthy of evolution",
+      "You are worthy of transformation", "You are worthy of becoming", "You are worthy of your journey"
+    ];
+
+    // Array to store positions of placed words
+    var usedPositions = [];
+    var initialTimeouts = [];
+    var interval = 50; // Faster interval for more words
+
+    // Function to apply typewriter effect
+    function applyTypewriterEffect(parentElement) {
+      var phrase = parentElement.querySelector('.placeholder').innerHTML;
+      var textElement = parentElement.querySelector('.text');
+      var i = 0;
+      parentElement.classList.add('typing');
+      
+      function typeNextCharacter() {
+        if (i < phrase.length) {
+          textElement.innerHTML += phrase.charAt(i);
+          i++;
+          setTimeout(typeNextCharacter, Math.floor(Math.random() * 30) + 10);
+        } else {
+          parentElement.classList.add('typed');
+          parentElement.classList.remove('typing');
+        }
+      }
+      
+      setTimeout(typeNextCharacter, Math.floor(Math.random() * 50) + 10);
+    }
+
+    // Function to shuffle an array
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    // Initialize the page with floating words
+    function initializeWords() {
+      const main = document.querySelector('main');
+      const shuffledWords = shuffleArray([...words]); // Create a copy to shuffle
+      
+      shuffledWords.forEach(function (phrase, i) {
+        var container = document.createElement('div');
+        container.classList.add('phrase');
+
+        var placeholder = document.createElement('span');
+        placeholder.classList.add('placeholder');
+        placeholder.innerText = phrase;
+
+        var span = document.createElement('span');
+        span.classList.add('text');
+
+        container.appendChild(placeholder);
+        container.appendChild(span);
+        main.appendChild(container);
+
+        setRandomPosition(container);
+
+        let timeout = setTimeout(function () {
+          applyTypewriterEffect(container);
+        }, i * interval);
+
+        initialTimeouts.push(timeout);
+      });
+    }
+
+    function setRandomPosition(parentElement) {
+      const bbox = parentElement.getBoundingClientRect();
+      const width = bbox.width;
+      const maxPercent = 90 - (width / window.innerWidth * 100);
+
+      var x = Math.random() * maxPercent;
+      var y = Math.random() * 100;
+      var fontSize = Math.floor(Math.random() * 16) + 12 + 'px'; // Slightly smaller font
+      var opacity = Math.random() * 0.5 + 0.3; // Vary opacity for depth
+
+      parentElement.style.top = `${y}%`;
+      parentElement.style.left = `${x}%`;
+      parentElement.style.fontSize = fontSize;
+      parentElement.style.opacity = opacity;
+
+      var animatedElement = parentElement.querySelector('.text');
+      animatedElement.style.animation = `floating ${5 + Math.random() * 5}s ease-in-out infinite ${Math.random() * 5}s`;
+    }
+
+    // Function to select three random words and move them to the viewport center
+    function selectRandomWords() {
+      var parentElements = document.querySelectorAll('.phrase');
+      const indices = [];
+      
+      // Select 3 unique random indices
+      while (indices.length < 3) {
+        const randomIndex = Math.floor(Math.random() * words.length);
+        if (!indices.includes(randomIndex)) indices.push(randomIndex);
+      }
+
+      let count = 0;
+      parentElements.forEach(function (div, i) {
+        if (indices.includes(i)) {
+          clearTimeout(initialTimeouts[i]);
+          if (!div.classList.contains('typing') && !div.classList.contains('typed')) {
+            applyTypewriterEffect(div);
+          }
+          document.body.style.background = '#E91E63';
+          div.style.color = '#fff';
+          div.style.opacity = '1';
+          div.style.left = '50vw';
+          div.style.top = `calc(50% + ${(count - 1) * 80}px)`;
+          div.style.fontSize = '20px';
+          div.classList.add('in-focus');
+
+          var animatedElement = div.querySelector('.text');
+          animatedElement.style.animationPlayState = 'paused';
+          count += 1;
+        } else {
+          div.style.opacity = '0';
+          div.style.transition = `all 3000ms, opacity ${Math.random() * 3}s`;
+        }
+      });
+
+      $('#initialButton').fadeOut(function () {
+        $('#email-button, #refresh-button').fadeIn();
+      });
+    }
+
+    // Initialize when DOM is ready
+    $(document).ready(function() {
+      initializeWords();
+      
+      // Button event listeners
+      $("#initialButton").on('click', selectRandomWords);
+      
+      $("button").hover(function () {
+        var pos = -(Math.floor(Math.random() * 5) + 1) * 55;
+        setTimeout(() => $(this).find("ul").css("margin-top", pos + "px"), 500);
+      }, function () {
+        $(this).find("ul").css("margin-top", "0px");
+      });
+      
+      $('#refresh-button').on('click', function () {
+        document.querySelectorAll('.phrase').forEach(function (div) {
+          div.style.transitionDelay = `0ms, ${Math.random() * 3}s`;
+          div.style.opacity = Math.random() * 0.5 + 0.3;
+          div.style.color = '#E91E63';
+          document.body.style.background = '#FFF';
+          if (div.classList.contains('in-focus')) {
+            div.classList.remove('in-focus');
+            div.querySelector('.text').style.animationPlayState = 'running';
+            setRandomPosition(div);
+          }
+        });
+        $('#email-button, #refresh-button').fadeOut(() => $('#initialButton').fadeIn());
+      });
+      
+      $('#email-button').on('click', function () {
+        let remains = [];
+        document.querySelectorAll('.in-focus').forEach(span => remains.push(span.innerText));
+        document.location = "mailto:?subject=you are worthy&body=" + encodeURIComponent(remains.join('\n'));
+      });
+      
+      $('#about-button').on('click', () => $('#about-text').fadeToggle());
+    });
+  </script>
+</body>
+</html>
